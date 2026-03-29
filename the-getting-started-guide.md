@@ -45,37 +45,29 @@ everything-claude-code/
 
 ## Installing ECC
 
-ECC is published to npm as `ecc-universal`. There are two ways to run the installer — both are equivalent and support all the same flags:
-
-| Method | When to use |
-|--------|-------------|
-| `npx ecc` | You have not cloned the repo. Runs the latest published version from npm, no setup required. |
-| `./install.sh` | You have the repo cloned locally. The shell script resolves symlinks and delegates to the same Node.js runtime. |
+Clone the repo and use `./install.sh` directly. The shell script resolves symlinks and delegates to the Node.js installer runtime.
 
 ```bash
-# Via npm (no clone needed)
-npx ecc typescript
+git clone https://github.com/abudhahir/everything-claude-code.git
+cd everything-claude-code
+```
 
-# Via local clone
+Then run:
+
+```bash
 ./install.sh typescript
 ```
 
-All examples in this guide show `npx ecc`. Replace with `./install.sh` if you are working from a local clone.
+> If you prefer not to clone, `npx ecc` runs the same installer from the published npm package (`ecc-universal`) without any local setup.
 
 ### Quick Start — Language Mode
 
 The simplest way to get started. Pass one or more language names:
 
 ```bash
-# Via npm
-npx ecc typescript
-npx ecc python
-npx ecc golang typescript   # multiple languages at once
-
-# Via local clone
 ./install.sh typescript
 ./install.sh python
-./install.sh golang typescript
+./install.sh golang typescript   # multiple languages at once
 ```
 
 This installs:
@@ -91,20 +83,20 @@ Files land in `~/.claude/rules/` by default.
 ### 1. Language Mode (Legacy)
 
 ```bash
-npx ecc typescript python
+./install.sh typescript python
 ```
 
 The original install method. Pass language names directly as positional arguments. Installs `rules/common/` plus the rules directory for each language specified. Best for most individual developers.
 
-**Available languages:** typescript, python, golang, swift, php (and others — run `npx ecc --help` to see the full list)
+**Available languages:** typescript, python, golang, swift, php (and others — run `./install.sh --help` to see the full list)
 
 ---
 
 ### 2. Profile Mode
 
 ```bash
-npx ecc --profile <name>
-npx ecc --profile developer --with security --without orchestration
+./install.sh --profile <name>
+./install.sh --profile developer --with security --without orchestration
 ```
 
 Installs a **named bundle** of modules defined in the ECC manifests. A profile is a pre-curated set of components (agents, skills, rules, hooks) grouped under a logical name. You do not need to know which individual modules to select — the profile handles that.
@@ -125,27 +117,24 @@ Installs a **named bundle** of modules defined in the ECC manifests. A profile i
 
 For a Python backend developer:
 ```bash
-# Install developer profile + Python rules
-npx ecc --profile developer python
+./install.sh --profile developer python
 ```
 
 For a Java + TypeScript developer:
 ```bash
-# Install developer profile + Java and TypeScript rules
-npx ecc --profile developer typescript
+./install.sh --profile developer typescript
 # Java rules are covered by the framework-language module inside developer profile
 # (includes springboot-patterns, java-coding-standards, jpa-patterns)
 ```
 
 For a Go developer who also wants security:
 ```bash
-npx ecc --profile security golang
+./install.sh --profile security golang
 ```
 
 For maximum control, use `--modules` to pick exactly what you need:
 ```bash
-# Python backend: core modules + framework skills + database skills
-npx ecc --modules rules-core,agents-core,commands-core,hooks-runtime,platform-configs,workflow-quality,framework-language,database python
+./install.sh --modules rules-core,agents-core,commands-core,hooks-runtime,platform-configs,workflow-quality,framework-language,database python
 ```
 
 Customize profiles with:
@@ -157,7 +146,7 @@ Customize profiles with:
 ### 3. Modules Mode
 
 ```bash
-npx ecc --modules id1,id2,id3
+./install.sh --modules id1,id2,id3
 ```
 
 Installs specific, explicit module IDs you provide. More granular than profiles — you handpick exactly what you want. Useful when you know precisely which components are needed and want full control over the install.
@@ -169,7 +158,7 @@ Also supports `--with` / `--without` overrides.
 ### 4. Config Mode
 
 ```bash
-npx ecc --config ecc-install.json
+./install.sh --config ecc-install.json
 ```
 
 Reads install intent from a JSON file instead of CLI flags. Useful for:
@@ -208,8 +197,8 @@ These flags work with any install mode:
 Example — preview what would be installed without touching any files:
 
 ```bash
-npx ecc --dry-run typescript python
-npx ecc --dry-run --profile developer --json
+./install.sh --dry-run typescript python
+./install.sh --dry-run --profile developer --json
 ```
 
 ---
@@ -254,13 +243,13 @@ You are beginning a fresh codebase and want Claude Code to follow consistent sta
 
 **Step 1 — Install ECC globally once** (if you haven't already):
 ```bash
-npx ecc --profile developer typescript   # adjust language to match your stack
+./install.sh --profile developer typescript   # adjust language to match your stack
 ```
 This puts rules, agents, commands, and hooks into `~/.claude/` where they apply to every project you open.
 
 **Step 2 — Preview what will be installed before committing:**
 ```bash
-npx ecc --dry-run --profile developer typescript
+./install.sh --dry-run --profile developer typescript
 ```
 
 **Step 3 — Open your project in Claude Code and start using commands:**
@@ -289,14 +278,14 @@ You want everyone on the team to use the same ECC setup without each person runn
 ```bash
 # In Makefile or setup.sh
 ecc-install:
-    npx ecc --config ecc-install.json
+    ./install.sh --config ecc-install.json
 ```
 
 **Step 3 — Each developer runs once after cloning:**
 ```bash
 make ecc-install
 # or
-npx ecc --config ecc-install.json
+./install.sh --config ecc-install.json
 ```
 
 Everyone gets an identical setup. When you update the config, the team re-runs to sync.
@@ -309,21 +298,19 @@ You have an existing codebase and want to introduce ECC without disrupting curre
 
 **Start minimal — avoid overwhelming an existing project:**
 ```bash
-npx ecc --profile core typescript
+./install.sh --profile core typescript
 ```
 
 `core` gives you rules, agents, commands, hooks, and quality workflow without the heavier skill bundles. Expand once the team is comfortable.
 
 **Preview first to understand what changes:**
 ```bash
-npx ecc --dry-run --profile core typescript
-# or: ./install.sh --dry-run --profile core typescript
+./install.sh --dry-run --profile core typescript
 ```
 
 **Expand incrementally once settled:**
 ```bash
-npx ecc --profile developer typescript   # add framework skills and database skills
-# or: ./install.sh --profile developer typescript
+./install.sh --profile developer typescript   # add framework skills and database skills
 ```
 
 ---
@@ -334,8 +321,7 @@ You use Cursor as your editor and want ECC rules and configs scoped to your proj
 
 ```bash
 cd your-project
-npx ecc --target cursor --profile developer typescript
-# or: ./install.sh --target cursor --profile developer typescript
+./install.sh --target cursor --profile developer typescript
 ```
 
 This installs into `./.cursor/` inside your project directory. Rules, hooks, agents, and MCP configs are all scoped to this project only. Commit the `.cursor/` directory to share the setup with your team.
@@ -347,8 +333,7 @@ This installs into `./.cursor/` inside your project directory. Rules, hooks, age
 You are working on a product where security review is a first-class concern — auth systems, payment flows, infrastructure code.
 
 ```bash
-npx ecc --profile security python
-# or: ./install.sh --profile security python
+./install.sh --profile security python
 ```
 
 This adds the full security module on top of core: security review skills, framework-specific security guidance (Django, Spring Boot, Laravel), scanning tools, and the security guide.
@@ -362,8 +347,7 @@ Use `/code-review` after every meaningful change — the security profile wires 
 You are using Claude Code for investigation, synthesis, writing, or publishing — not primarily for software development.
 
 ```bash
-npx ecc --profile research
-# or: ./install.sh --profile research
+./install.sh --profile research
 ```
 
 This installs research APIs (Claude API, Exa search, deep research skills), business content skills (article writing, investor materials, market research), and social distribution (crosspost, X API) on top of the core baseline.
@@ -375,16 +359,14 @@ This installs research APIs (Claude API, Exa search, deep research skills), busi
 You are building agentic systems, autonomous loops, or LLM-powered pipelines and need patterns beyond standard app development.
 
 ```bash
-npx ecc --profile full --without supply-chain-domain --without document-processing
-# or: ./install.sh --profile full --without supply-chain-domain --without document-processing
+./install.sh --profile full --without supply-chain-domain --without document-processing
 ```
 
 `full` includes the `agentic-patterns` module which covers agent harness construction, autonomous loops, cost-aware LLM pipelines, Claude DevFleet, and more. Exclude domain modules that are irrelevant to your work to keep the install lean.
 
 Or install only what you need explicitly:
 ```bash
-npx ecc --modules rules-core,agents-core,commands-core,hooks-runtime,platform-configs,workflow-quality,agentic-patterns,orchestration
-# or: ./install.sh --modules rules-core,agents-core,commands-core,hooks-runtime,platform-configs,workflow-quality,agentic-patterns,orchestration
+./install.sh --modules rules-core,agents-core,commands-core,hooks-runtime,platform-configs,workflow-quality,agentic-patterns,orchestration
 ```
 
 ---
@@ -395,12 +377,10 @@ You switch between Claude Code and OpenAI Codex and want consistent standards ac
 
 ```bash
 # Install for Claude Code
-npx ecc --profile developer typescript
-# or: ./install.sh --profile developer typescript
+./install.sh --profile developer typescript
 
 # Install for Codex
-npx ecc --target codex --profile developer typescript
-# or: ./install.sh --target codex --profile developer typescript
+./install.sh --target codex --profile developer typescript
 ```
 
 Each target gets its own install state file, so they are tracked independently. Both pull from the same source modules.
@@ -411,13 +391,13 @@ Each target gets its own install state file, so they are tracked independently. 
 
 | Situation | Recommended Command |
 |-----------|-------------------|
-| New project, solo dev | `npx ecc --profile developer <language>` or `./install.sh --profile developer <language>` |
-| Team onboarding | `npx ecc --config ecc-install.json` or `./install.sh --config ecc-install.json` |
-| Existing project, minimal disruption | `npx ecc --profile core <language>` or `./install.sh --profile core <language>` |
-| Cursor editor, project-scoped | `npx ecc --target cursor --profile developer <language>` or `./install.sh --target cursor --profile developer <language>` |
-| Security-critical codebase | `npx ecc --profile security <language>` or `./install.sh --profile security <language>` |
-| Research / content work | `npx ecc --profile research` or `./install.sh --profile research` |
-| Building AI agents / LLM pipelines | `npx ecc --profile full --without supply-chain-domain --without document-processing` or `./install.sh --profile full ...` |
+| New project, solo dev | `./install.sh --profile developer <language>` |
+| Team onboarding | `./install.sh --config ecc-install.json` |
+| Existing project, minimal disruption | `./install.sh --profile core <language>` |
+| Cursor editor, project-scoped | `./install.sh --target cursor --profile developer <language>` |
+| Security-critical codebase | `./install.sh --profile security <language>` |
+| Research / content work | `./install.sh --profile research` |
+| Building AI agents / LLM pipelines | `./install.sh --profile full --without supply-chain-domain --without document-processing` |
 | Multiple harnesses | Run once per target: `--target claude`, `--target codex` |
 
 ---
@@ -427,4 +407,4 @@ Each target gets its own install state file, so they are tracked independently. 
 - Read `the-shortform-guide.md` for skills, hooks, subagents, and daily workflow
 - Read `the-longform-guide.md` for the full system design and philosophy
 - See `CONTRIBUTING.md` for how to add your own agents, skills, and commands
-- Run `npx ecc --help` or `./install.sh --help` to see all available options and languages
+- Run `./install.sh --help` to see all available options and languages
