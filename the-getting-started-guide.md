@@ -60,6 +60,50 @@ Then run:
 
 > If you prefer not to clone, `npx ecc` runs the same installer from the published npm package (`ecc-universal`) without any local setup.
 
+### Installing as an npm Package (Without Publishing)
+
+If you want `npx ecc` or the `ecc` bin available globally from your local clone — without publishing to the npm registry — use one of the following methods:
+
+#### Option 1: `npm link` (recommended for active development)
+
+```bash
+# In the repo directory
+npm link
+
+# Use it anywhere
+ecc typescript
+```
+
+Changes to the repo are reflected immediately without reinstalling. To unlink later:
+
+```bash
+npm unlink -g ecc-universal
+```
+
+#### Option 2: Install from local path
+
+```bash
+npm install -g /path/to/everything-claude-code
+
+# Then use
+ecc typescript
+```
+
+#### Option 3: Pack and install the tarball
+
+```bash
+# In the repo — creates ecc-universal-<version>.tgz
+npm pack
+
+# Install the tarball globally
+npm install -g ecc-universal-*.tgz
+
+# Then use
+ecc typescript
+```
+
+Use `npm pack` when you want to test the exact artifact that would be published, or distribute it without pushing to npm.
+
 ### Quick Start — Language Mode
 
 The simplest way to get started. Pass one or more language names:
